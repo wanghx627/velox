@@ -47,6 +47,8 @@ static std::string_view kOssScheme{"oss://"};
 // Tencent COS support S3 format.
 static std::string_view kCosScheme{"cos://"};
 static std::string_view kCosNScheme{"cosn://"};
+// kingsoft ks3 support
+static std::string_view kKs3Scheme{"ks3://"};
 
 // From AWS documentation
 constexpr int kS3MaxKeySize{1024};
@@ -76,10 +78,16 @@ inline bool isCosNFile(const std::string_view filename) {
   return filename.substr(0, kCosNScheme.size()) == kCosNScheme;
 }
 
+
+inline bool isKs3File(const std::string_view filename) {
+  return filename.substr(0, kKs3Scheme.size()) == kKs3Scheme;
+}
+
 inline bool isS3File(const std::string_view filename) {
   // TODO: Each prefix should be implemented as its own filesystem.
   return isS3AwsFile(filename) || isS3aFile(filename) || isS3nFile(filename) ||
-      isOssFile(filename) || isCosFile(filename) || isCosNFile(filename);
+      isOssFile(filename) || isCosFile(filename) || isCosNFile(filename) || 
+      isKs3File(filename);
 }
 
 // The input `path` must not have the S3 prefix.
@@ -121,6 +129,8 @@ inline std::string_view getPath(std::string_view path) {
     return path.substr(kCosScheme.length());
   } else if (isCosNFile(path)) {
     return path.substr(kCosNScheme.length());
+  } else if (isKs3File(path)) {
+    return path.substr(kKs3Scheme.length());
   }
   return path;
 }
