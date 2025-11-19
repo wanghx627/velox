@@ -185,6 +185,7 @@ struct AwsInstance {
     // This option allows the AWS SDK C++ to catch the SIGPIPE signal and
     // log a message.
     awsOptions_.httpOptions.installSigPipeHandler = true;
+    awsOptions_.httpOptions.compliantRfc3986Encoding = true;
     Aws::InitAPI(awsOptions_);
   }
 
